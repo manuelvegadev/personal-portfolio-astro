@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+// Supports weights 100-800
+import '@fontsource-variable/jetbrains-mono';
+import '@fontsource/ibm-plex-sans/300.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/700.css';
+---
+
+<script>
+    
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+        const hand = document.querySelector('.hand') as HTMLSpanElement;
+
+        hand.addEventListener('animationend', () => hand.style.animation = 'none');
+        hand.parentElement.addEventListener('mouseover', () => hand.style.animation = 'handWave 1s ease-in-out forwards')
+
+        const h1 = document.querySelector('h1');
+
+        for (let i = 0; i < h1.innerText.length; i++) {
+            setTimeout(() => {
+                h1.style.width = 'calc(' + ((100 / h1.innerText.length) * (i + 1)) + '% - 2px)';
+            }, i * 100 + 1000)
+            setTimeout(() => {
+                h1.classList.remove('typing')
+            }, h1.innerText.length * 100 + 3000)
+        }
+
+        const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+        const video = document.querySelector('video');
+        const videoSources = [
+            '/hero-bg-480p.mp4',
+            '/hero-bg-720p.mp4',
+            '/hero-bg-1080p.mp4',
+            '/hero-bg-4k.mp4',
+        ];
+
+        if (viewportWidth < 853) {
+            video.src = videoSources[0];
+        } else if (viewportWidth < 1280) {
+            video.src = videoSources[1];
+        } else if (viewportWidth < 1920) {
+            video.src = videoSources[2];
+        } else {
+            video.src = videoSources[3];
+        }
+        
+        const videoDuration = 60;
+        
+        await video.play();
+        
+        video.classList.add('shown');
+        
+        setInterval(async () => {
+            video.classList.remove('shown');
+            await sleep(1000);
+            video.currentTime = 0;
+            await video.play();
+            video.classList.add('shown');
+        }, videoDuration * 1000)
+
+    })
+</script>
+
+<Layout title="Welcome to Astro.">
+    <main>
+        <div class="video-bg">
+            <video muted></video>
+        </div>
+        <section class="hero">
+            <p><span class="hand">👋</span>Hello, I'm</p>
+            <div style="display: flex; justify-content: center">
+                <h1 class="text-center typing">
+                    Manuel Vega
+                </h1>
+            </div>
+            <span class="mono text-center">
+                <div class="text-center" style="font-size: 1.25rem">
+            <span style="color: #2DAAFC;"><</span> TypeScript Developer <span style="color: #2DAAFC">/></span>    
+                </div>
+            </span>
+
+        </section>
+    </main>
+</Layout>
+
+
+<style>
+    html {
+        background-color: #1E1F22;
+        padding: 0;
+        margin: 0;
+        color: #BABABA;
+        font-size: 16px;
+    }
+
+    .hand {
+        display: inline-block;
+        animation: handWave 1s ease-in-out forwards;
+        animation-delay: 1s;
+        transform-origin: 70% 70%;
+        margin-right: .5em;
+    }
+
+    .hand:hover {
+        animation: handWave 1s ease-in-out forwards;
+    }
+
+    @keyframes handWave {
+        0% {
+            transform: rotate(0deg);
+        }
+        20% {
+            transform: rotate(30deg);
+        }
+        40% {
+            transform: rotate(0deg);
+        }
+        60% {
+            transform: rotate(15deg);
+        }
+        80% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
+    @keyframes dotScroll {
+        0% {
+            background-position-y: 100px
+        }
+        to {
+            background-position-y: 0
+        }
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        font-family: 'JetBrains Mono Variable', monospace;
+        font-weight: normal;
+        background-image: radial-gradient(circle, #2e3c51 .1rem, transparent 0);
+        background-size: 100px 100px;
+        background-position: center;
+        background-repeat: repeat;
+        animation: dotScroll 8s linear infinite;
+    }
+
+    main {
+        height: 300vh;
+        max-width: calc(100vw - 2rem);
+        margin: 0 auto;
+    }
+
+    .video-bg {
+        background-image: url('/hero-bg-480p.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: absolute;
+        inset: 0;
+        height: 100vh;
+        height: 100dvh;
+        opacity: .15;
+        z-index: -1;
+    }
+    
+    @media (width > 583px) {
+        .video-bg {
+            background-image: url('/hero-bg-720p.webp');
+        }
+    }
+    
+    @media (width > 1280px) {
+        .video-bg {
+            background-image: url('/hero-bg-1080p.webp');
+        }
+    }
+    
+    @media (width > 1920px) {
+        .video-bg {
+            background-image: url('/hero-bg-4k.webp');
+        }
+    }
+
+    .video-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        top: 50%;
+        display: block;
+        background-image: linear-gradient(transparent, #1E1F22);
+    }
+
+    video {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        object-fit: cover;
+        object-position: center;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    
+    video.shown {
+        opacity: 1;
+    }
+
+    .mono {
+
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 75vh;
+        height: 75dvh;
+        flex-direction: column;
+    }
+
+    p {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    h1 {
+        width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        margin: .5em 0;
+        font-size: 3.125rem;
+        font-weight: 100;
+        position: relative;
+        transition: none !important;
+        padding-right: 2px;
+    }
+
+    h1.typing::after {
+        content: '';
+        display: block;
+        position: absolute;
+        inset: 0;
+        left: calc(100% - 2px);
+        opacity: 1;
+        background-color: #BABABA;
+        animation: cursorBlink 1s steps(2) infinite;
+    }
+
+    @keyframes cursorBlink {
+        from {
+            opacity: 0;
+        }
+    }
+</style>

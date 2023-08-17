@@ -1,0 +1,19 @@
+{
+  "name": "personal-portfolio-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.0.9",
+    "@fontsource/ibm-plex-mono": "^5.0.8",
+    "@fontsource/ibm-plex-sans": "^5.0.8",
+    "@fontsource/twinkle-star": "^5.0.8",
+    "astro": "^2.10.7"
+  }
+}
